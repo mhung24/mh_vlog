@@ -33,33 +33,33 @@ namespace Mhung.Data
 
             builder.Entity<IdentityUserLogin<Guid>>().ToTable("AppUserLogins").HasKey(x => x.UserId);
 
-            builder.Entity<IdentityUserRole<Guid>>().ToTable("AppUserRoles").HasKey(x => new { x.RoleId, x.UserId });
+            builder.Entity<IdentityUserRole<Guid>>().ToTable("AppUserRoles").HasKey(x => new { x.UserId, x.RoleId });
 
             builder.Entity<IdentityUserToken<Guid>>().ToTable("UserTokens").HasKey(x => new {  x.UserId });
         }
 
-        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
-        {
-            var entries = ChangeTracker.Entries().Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
+        //public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)
+        //{
+        //    var entries = ChangeTracker.Entries().Where(e => e.State == EntityState.Added);
 
-            foreach (var engtityEntry in entries)
-            {
-                var dateCreatedProp = engtityEntry.Entity.GetType().GetProperty("DateCreated");
-                if (engtityEntry.State == EntityState.Added && dateCreatedProp != null)
-                {
-                    dateCreatedProp.SetValue(engtityEntry.Entity, DateTime.Now);
-                }
+        //    foreach (var engtityEntry in entries)
+        //    {
+        //        var dateCreatedProp = engtityEntry.Entity.GetType().GetProperty("DateCreated");
+        //        if (engtityEntry.State == EntityState.Added && dateCreatedProp != null)
+        //        {
+        //            dateCreatedProp.SetValue(engtityEntry.Entity, DateTime.Now);
+        //        }
 
-                var modifiedDateProp = engtityEntry.Entity.GetType().GetProperty("ModifiedDate");
-                if (engtityEntry.State == EntityState.Modified && modifiedDateProp != null)
-                {
-                    modifiedDateProp.SetValue(engtityEntry.Entity, DateTime.Now);
-                }
+        //        //var modifiedDateProp = engtityEntry.Entity.GetType().GetProperty("ModifiedDate");
+        //        //if (engtityEntry.State == EntityState.Modified && modifiedDateProp != null)
+        //        //{
+        //        //    modifiedDateProp.SetValue(engtityEntry.Entity, DateTime.Now);
+        //        //}
 
 
-            }
+        //    }
 
-            return base.SaveChangesAsync( cancellationToken);
-        }
+        //    return base.SaveChangesAsync( cancellationToken);
+        //}
     }
 }

@@ -1,12 +1,14 @@
+using Mhung.Api;
 using Mhung.Core.Domain.Identity;
 using Mhung.Data;
+using Mhung.Data.SeedWorks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 var connectionString = configuration.GetConnectionString("DefaultConnection");
-// Add services to the container.
+
 
 builder.Services.AddDbContext<MhungBlogContext>(options =>
 {
@@ -37,6 +39,10 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.User.RequireUniqueEmail = true; 
 });
 
+// Add services to the container.
+builder.Services.AddScoped(typeof(IRepository<,>), typeof(RepositoryBase<,>));
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 
 
 builder.Services.AddControllers();
@@ -58,5 +64,9 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Seed database
+
+app.MigrateDatabase();
 
 app.Run();
